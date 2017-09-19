@@ -1,0 +1,65 @@
+{
+  "name": "megane-theme",
+  "version": "0.9.0",
+  "description": "Wordpress Webpack Package",
+  "author": "Aldrich Allen Barcenas",
+  "license": "",
+  "homepage": "https://www.megane.life",
+  "scripts": {
+    "build": "cross-env NODE_ENV=development webpack --config=webpack/webpack.config.js --progress --color --watch",
+    "build:prod": "cross-env NODE_ENV=production webpack --config=webpack/webpack.config.js --progress --color",
+    "build:dlls": "yarn run clean:dll && cross-env BUILD_DLL=true webpack --display-chunks --color --config webpack/webpack.dll.js --progress --hide-modules",
+    "clean:build": "cleandir build",
+    "clean:dll": "cleandir webpack/dlls",
+    "postinstall": "node semantic.fix.js && yarn run build:dlls"
+  },
+  "devDependencies": {
+    "autoprefixer": "7.1.4",
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-preset-es2015": "6.24.1",
+    "clean-dir": "1.0.3",
+    "copy-webpack-plugin": "4.0.1",
+    "cross-env": "5.0.5",
+    "css-loader": "0.28.7",
+    "eslint": "4.7.0",
+    "eslint-config-standard": "10.2.1",
+    "eslint-plugin-import": "2.7.0",
+    "eslint-plugin-node": "5.1.1",
+    "eslint-plugin-promise": "3.5.0",
+    "eslint-plugin-standard": "3.0.1",
+    "extract-text-webpack-plugin": "3.0.0",
+    "file-loader": "0.11.2",
+    "less": "2.7.2",
+    "less-loader": "4.0.5",
+    "less-plugin-autoprefix": "1.5.1",
+    "less-plugin-clean-css": "1.5.1",
+    "node-sass": "4.5.3",
+    "postcss-loader": "2.0.6",
+    "prettier": "1.7.0",
+    "sass-loader": "6.0.6",
+    "semantic-ui-less": "2.2.12",
+    "source-map-loader": "0.2.1",
+    "style-loader": "0.18.2",
+    "uglify-js": "git://github.com/mishoo/UglifyJS2.git#harmony",
+    "uglifyjs-webpack-plugin": "0.4.6",
+    "webpack": "3.6.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "standard"
+    ],
+    "globals": {
+      "$": true,
+      "alert": true
+    }
+  },
+  "dependencies": {
+    "lodash": "4.17.4"
+  }
+}
