@@ -1,7 +1,8 @@
-const Webpack = require('webpack')
-const LessPluginAutoPrefix = require('less-plugin-autoprefix')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 const CleanCSSPlugin = require('less-plugin-clean-css')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const LessPluginAutoPrefix = require('less-plugin-autoprefix')
+const Webpack = require('webpack')
 const autoPrefixer = require('autoprefixer')
 
 const path = require('path')
@@ -17,7 +18,7 @@ const webpack = {
   },
   output: {
     path: path.resolve('build'),
-    publicPath: '/',
+    publicPath: '/app/themes/theme.name',
     filename: '[name].bundle.js',
     chunkFilename: '[name]-[chunkhash].js'
   },
@@ -94,6 +95,45 @@ const webpack = {
       minimize: (env === 'production'),
       debug: false
     }),
+    new ExtractTextPlugin({
+      filename: '[name].style.css',
+      allChunks: true
+    })
+  ]
+}
+
+if (env === 'development') {
+  webpack.plugins.push(
+    new BrowserSyncPlugin({
+      proxy: 'domain.local',
+      port: 3000,
+      files: [
+        '**/*.php',
+        '**/*.twig'
+      ],
+      ghostMode: {
+        clicks: false,
+        location: false,
+        forms: false,
+        scroll: false
+      },
+      injectChanges: true,
+      logFileChanges: true,
+      logLevel: 'debug',
+      logPrefix: 'webpack',
+      notify: true,
+      reloadDelay: 0
+    })
+  )
+}
+
+if (env === 'production') {
+  webpack.plugins.push(
+    // More minification
+    new Webpack.optimize.AggressiveMergingPlugin()
+  )
+
+  webpack.plugins.push(
     new Webpack.optimize.UglifyJsPlugin({
       beautify: false,
       mangle: {
@@ -104,19 +144,7 @@ const webpack = {
         screw_ie8: true
       },
       comments: false
-    }),
-    new ExtractTextPlugin({
-      filename: '[name].style.css',
-      allChunks: true
-    })
-  ]
-}
-
-if (env === 'production') {
-  webpack.plugins.push(
-    // More minification
-    new Webpack.optimize.AggressiveMergingPlugin()
-  )
+    }))
 }
 
 module.exports = webpack
